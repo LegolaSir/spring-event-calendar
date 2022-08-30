@@ -15,7 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final static String[] WHITELIST_ENDPOINTS = {
+    private final static String[] SWAGGER_ENDPOINTS = {
             // -- Swagger UI v2
             "/v2/api-docs",
             "/swagger-resources",
@@ -27,8 +27,12 @@ public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
             // -- Swagger UI v3 (OpenAPI)
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            // My custom endpoints
-            "/user/register"
+    };
+
+    private final static String[] WHITELIST_ENDPOINTS = {
+        // My custom endpoints
+        "user/register",
+        "user/login"
     };
 
     @Autowired
@@ -40,6 +44,7 @@ public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().ignoringAntMatchers("/user/register")
                 .and()
                 .authorizeRequests()
+                .antMatchers(SWAGGER_ENDPOINTS).permitAll()
                 .antMatchers(WHITELIST_ENDPOINTS).permitAll()
                 .anyRequest().authenticated()
                 .and()
